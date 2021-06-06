@@ -10,11 +10,11 @@
 
 连接冰蝎的时候加get参数stage=s
 
-![2](.\2.png)
+![2](2.png)
 
 execute command之前要先点Inject进行注入
 
-![1](.\1.png)
+![1](1.png)
 
 ### 利用链
 
