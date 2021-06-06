@@ -37,7 +37,7 @@ Commons-CollectionsK1_1 和K1的区别基本上只是我用的是InstantiateTran
 
 另外我这边同一个listener同时实现命令执行回显和内存马,命令执行回显可以GBK编码
 
-核心利用链为实现一个Listener同时继承AbstractTranslet类并且实现ServletRequestListener接口
+核心逻辑为实现一个Listener同时继承AbstractTranslet类并且实现ServletRequestListener接口来加载任意类并调用方法
 
 ```JAVA
 public class Init extends AbstractTranslet implements ServletRequestListener  {
