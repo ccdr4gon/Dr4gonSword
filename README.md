@@ -15,11 +15,11 @@
 
 ### 使用方法
 
+点击Inject进行注入,然后才能连接冰蝎或者执行命令
+
 连接冰蝎的时候加get参数stage=s
 
 ![2](2.png)
-
-execute command之前要先点Inject进行注入
 
 ![1](1.png)
 
