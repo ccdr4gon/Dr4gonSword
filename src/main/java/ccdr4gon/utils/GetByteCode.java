@@ -1,7 +1,5 @@
 package ccdr4gon.utils;
 
-import ccdr4gon.Load;
-
 
 import net.bytebuddy.ByteBuddy;
 import java.util.Base64;
@@ -17,10 +15,4 @@ public class GetByteCode {
             .getBytes();
         System.out.println(Base64.getEncoder().encodeToString(code));
     }
-
-
-
-
-
-
 }

