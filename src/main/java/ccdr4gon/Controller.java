@@ -159,6 +159,7 @@ public class Controller implements Initializable {
 
         ShiroTextArea.appendText("ccdr4gon's Sword 0.0.2 --- 能用就行的简陋版本\n");
         ShiroTextArea.appendText("Tomcat包括SpringBoot的嵌入式Tomcat(默认Web容器),直接使用即可\n");
-        ShiroTextArea.appendText("使用方法:先点击Inject注入，然后可以执行命令，并且此Tomcat解析的任何非404路径都可以连接冰蝎3\n");
+        ShiroTextArea.appendText("使用方法:先点击Inject注入，然后可以执行命令，并且此Tomcat能解析的任何路径都可以连接冰蝎3\n");
+        ShiroTextArea.appendText("=================================================================================\n");
     }
 }
