@@ -25,7 +25,7 @@
 
 ### 利用链
 
-Commons-CollectionsK1_1 和K1的区别基本上只是我用的是InstantiateTransformer,K1用的是InvokerTransformer(大概是CC3和CC6分别缝合TemplatesImpl以后的区别)
+Commons-CollectionsK1_1 和K1的区别基本上只是我用的是InstantiateTransformer,K1用的是InvokerTransformer(大概是CC3和CC6分别缝合TiedMapEntry来去掉transformer数组)
 
 总结:几乎一样
 
@@ -112,7 +112,8 @@ Springboot 2.0.5 √ <tomcat.version>8.5.51</tomcat.version> shiro version 1.7.0
 - shiro
   - 自定义Behinder的pass(现在还只能是默认的rebeyond,太惨了)
   -  ~~aes gcm加密方式(说实话也不知道有没有用)~~ 0.0.2版本已更新
-  - commons-collections4的利用链
+  - commons-collections4利用链
+  - commonsbeanutils利用链
 - fastjson
 - weblogic等等更多以后准备学习的JAVA漏洞
 - 由于java流只能读取一次,okhttp库的IO目前处于能用就行的丑陋状态,之后看看怎么改改
