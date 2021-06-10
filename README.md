@@ -7,7 +7,7 @@
     + [本地测试过的中间件版本](#-----------)
 - [未来准备更新(可能)](#----------)
 
-版本0.0.1,目前只有Shiro,后续随着学习会应该加入更多漏洞
+版本0.0.2,目前只有Shiro,后续随着学习会应该加入更多漏洞
 
 仅供交流学习漏洞利用方式,请勿用于非法用途
 
@@ -80,20 +80,41 @@ public class Init extends AbstractTranslet implements ServletRequestListener  {
 
 ### 本地测试过的中间件版本
 
+Tomcat 7.0.109 √
+
 Tomcat 8.5.51 √
 
-Springboot 2.3.5 √  似乎对应 tomcat-embed-core 9.0.39
+Tomcat 9.0.46 √
+
+Springboot 2.3.5 √  <tomcat.version>9.0.39</tomcat.version> 
+
+Springboot 2.0.5 √ <tomcat.version>8.5.51</tomcat.version>
+
+Springboot 2.0.5 √ <tomcat.version>8.5.51</tomcat.version> shiro version 1.7.0 (gcm)
+
+![3](./3.png)
+
+![4](./4.png)
+
+# 更新记录
+
+## 0.0.2 
+
+- 添加Tomcat7利用链(tomcat7巨烦)
+- okhttp的https证书全信任，删除了get请求的一些header（为了不触发header too large）
+- 添加了GCM加密方式
+- 其他记不到了的小修改
 
 # 未来准备更新(可能)
 
-- 把类名改了,总感觉有可能会被溯源
+- 依赖有点问题,目前我是直接把tomcat的lib全加到projectstructure里了
+- 把类名改了,用下去的话总感觉会有一天接到溯源的电话
 - shiro
   - 自定义Behinder的pass(现在还只能是默认的rebeyond,太惨了)
-  - aes gcm加密方式(说实话也不知道有没有用)
+  -  ~~aes gcm加密方式(说实话也不知道有没有用)~~ 0.0.2版本已更新
   - commons-collections4的利用链
-
 - fastjson
-
 - weblogic等等更多以后准备学习的JAVA漏洞
-- okhttp库response的获取有点迷,似乎只能获取一次,目前处于能用就行的丑陋状态,之后看看怎么改改
+- 由于java流只能读取一次,okhttp库的IO目前处于能用就行的丑陋状态,之后看看怎么改改
+- 一键清除所有listener
 
