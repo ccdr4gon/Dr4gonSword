@@ -28,8 +28,6 @@ public class T7 extends AbstractTranslet implements ServletRequestListener {
     public void requestDestroyed(ServletRequestEvent s) {}
 
         public T7() {
-        super();
-        super.namesArray= new String[]{"1"};
         try {
             Object o=new Object();
             Thread[] g = (Thread[]) G(Thread.currentThread().getThreadGroup(), "threads");
