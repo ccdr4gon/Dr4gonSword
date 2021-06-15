@@ -1,5 +1,4 @@
 .idea
 target
 .git
-.gitignore
-src/main/java/ccdr4gon/archive
+/src/main/java/ccdr4gon/archive
