@@ -1,19 +1,14 @@
 package ccdr4gon;
 
-import ccdr4gon.utils.AesUtils;
 import ccdr4gon.utils.HttpUtil;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import net.bytebuddy.ByteBuddy;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.crypto.AesCipherService;
 import javafx.fxml.Initializable;
-import org.apache.shiro.util.ByteSource;
 
 import java.net.URL;
-import java.util.Base64;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -125,7 +120,7 @@ public class Controller implements Initializable {
             }
 
             ShiroTextArea.appendText("冰蝎连接地址:\n"+shellurl+"\n");
-            ShiroTextArea.appendText("冰蝎连接密码:\n"+pass+"\n");
+            ShiroTextArea.appendText("冰蝎连接密码:\n"+pass+"\n\n");
 
         }catch (Exception e){
             e.printStackTrace();
@@ -150,9 +145,9 @@ public class Controller implements Initializable {
         ShiroInjectButton.setOnAction(this::ShiroInjectHandler);
         ShiroExecuteButton.setOnAction(this::ShiroExecuteHandler);
 
-        ShiroTextArea.appendText("ccdr4gon's Sword -- 俺寻思似乎能使的0.0.3版本\n");
+        ShiroTextArea.appendText("ccdr4gon's Sword -- 俺寻思好像能使的0.0.3版本\n");
         ShiroTextArea.appendText("Tomcat包括SpringBoot的嵌入式Tomcat(默认Web容器),直接使用即可\n");
         ShiroTextArea.appendText("使用方法:\n点击Inject注入,可以执行命令，并且此Tomcat能解析的任何路径都可以连接内存马(需要添加get参数stage=s)\n");
-        ShiroTextArea.appendText("==============================================================================================\n");
+        ShiroTextArea.appendText("==============================================================================================\n\n");
     }
 }

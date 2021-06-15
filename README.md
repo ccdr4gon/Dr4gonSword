@@ -20,7 +20,9 @@
 
 在红队中发现现有shiro利用工具有些时候会注入内存马失败,于是自己写下了这个小工具,也是为了更好地了解漏洞原理与利用方式
 
-因为刚入门JAVA,所以肯定还有很多不足,目前只有Shiro,后续随着学习会应该加入更多漏洞(大概)
+因为刚入门JAVA,所以肯定还有很多不足,代码也写得比较丑陋
+
+目前只有Shiro,后续随着学习会应该加入更多漏洞(大概)
 
 ## Shiro
 
@@ -130,7 +132,7 @@ Tomcat 8.5.51 √ with commons-collections4 dependency
 - 添加了GCM加密方式
 - 其他记不到了的小修改
 
-# 未来准备更新(可能)
+# 未来更新(可能)
 
 - 依赖有点问题,目前我是直接把tomcat的lib全加到projectstructure里了
 - 把类名改了,用下去的话总感觉会有一天接到溯源的电话
@@ -142,6 +144,7 @@ Tomcat 8.5.51 √ with commons-collections4 dependency
 - fastjson
 - weblogic等等更多以后准备学习的JAVA漏洞
 - 由于java流只能读取一次,okhttp库的IO目前处于能用就行的丑陋状态,之后看看怎么改改
+- 看了比较新版的behinder之后这边考虑要不要把pagecontext删了(删了以后可能连不上旧版的behinder了)
 - 一键清除所有listener
 
 # 感谢
