@@ -32,9 +32,9 @@
 
 连接冰蝎的时候加get参数stage=s
 
-![2](2.png)
+![2](./images/2.png)
 
-![1](1.png)
+![1](./images/1.png)
 
 ### 利用链
 
@@ -46,7 +46,7 @@ Commons-CollectionsK1_1 和K1的区别基本上只是我用的是InstantiateTran
 
 使用listener注入,相比于使用servlet来说,不会被shiro拦,只要tomcat能解析的路径就能上线内存马,不用怕shirofilter匹配*的情况,例如P师傅的shirodemo环境(2021强网杯hard pentest,如下图)
 
-![](./5.png)
+![](./images/5.png)
 
 
 
@@ -111,11 +111,11 @@ Springboot 2.0.5 √ <tomcat.version>8.5.51</tomcat.version> shiro version 1.7.0
 
 Tomcat 8.5.51 √ with commons-collections4 dependency
 
-![3](./3.png)
+![3](./images/3.png)
 
-![4](./4.png)
+![4](./images/4.png)
 
-![6](./6.png)
+![6](./images/6.png)
 
 # 更新记录
 
@@ -146,6 +146,7 @@ Tomcat 8.5.51 √ with commons-collections4 dependency
 - 由于java流只能读取一次,okhttp库的IO目前处于能用就行的丑陋状态,之后看看怎么改改
 - 看了比较新版的behinder之后这边考虑要不要把pagecontext删了(删了以后可能连不上旧版的behinder了)
 - 一键清除所有listener
+- 更多webshell管理器,哥斯拉等等
 
 # 感谢
 
