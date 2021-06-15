@@ -1,7 +1,6 @@
 .idea
 target
 .git
-.gitignore
 Dr4gonSword.iml
 **/archive
 **/test
