@@ -93,9 +93,6 @@ public class Controller implements Initializable {
         boolean is_gcm=ShiroAlgorithm.isSelected();
         String loadurl,shellurl;
 
-
-
-
         try {
             String initPayload=InitFactory.getpayload(middleware,chain,key,is_gcm);
             String loadPayload=LoadFactory.getPayload(middleware,pass);
