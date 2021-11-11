@@ -142,7 +142,7 @@ public class Controller implements Initializable {
         ShiroInjectButton.setOnAction(this::ShiroInjectHandler);
         ShiroExecuteButton.setOnAction(this::ShiroExecuteHandler);
 
-        ShiroTextArea.appendText("ccdr4gon's Sword -- 俺寻思好像能使的0.0.3版本\n");
+        ShiroTextArea.appendText("ccdr4gon's Sword -- 简陋的0.0.4版本\n");
         ShiroTextArea.appendText("Tomcat包括SpringBoot的嵌入式Tomcat(默认Web容器),直接使用即可\n");
         ShiroTextArea.appendText("使用方法:\n点击Inject注入,可以执行命令，并且此Tomcat能解析的任何路径都可以连接内存马(需要添加get参数stage=s)\n");
         ShiroTextArea.appendText("==============================================================================================\n\n");
