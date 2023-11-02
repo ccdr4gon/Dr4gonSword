@@ -19,17 +19,10 @@
 
 版本0.0.4
 
-在红队中发现现有shiro利用工具有些时候会注入内存马失败,于是自己写下了这个小工具,也是为了更好地了解漏洞原理与利用方式
-
-因为刚入门JAVA,所以肯定还有很多不足,代码也写得比较丑陋
-
-目前只有Shiro,后续随着学习会应该加入更多漏洞(大概)
+不干红队多年，archived
 
 ## Shiro
 
-### 原理介绍
-
-请移步 https://ccdragon.cc/?p=3103
 
 ### 使用方法
 
@@ -62,43 +55,6 @@ Tomcat 8.5.51 √ with commons-collections4 dependency
 ![4](./images/4.png)
 
 ![6](./images/6.png)
-
-# 更新记录
-
-## 0.0.4
-
-连接冰蝎的方式由pageContext变成map,这样可以避免遇到奇奇怪怪的依赖问题(将依赖类由defineClass注入无法完全解决依赖问题)。0.0.4版本将无法连接较低版本的Behinder 
-
-去实习打工了几个月，一直没更新，终于离职了，毕设也有着落了，后面的时间准备学习k8s/docker和各种java中间件的漏洞
-
-## 0.0.3
-
-- Behinder内存马兼容性修复并且添加自定义密码(会生成一个随机密码)
-- CommonsCollections4依赖的利用链(只是把.decorate改成了.lazyMap)
-- 重构了controller生成payload部分的代码结构,使用factory
-
-## 0.0.2 
-
-- 添加Tomcat7利用链(tomcat7巨烦)
-- okhttp的https证书全信任，删除了get请求的一些header（为了不触发header too large）
-- 添加了GCM加密方式
-- 其他记不到了的小修改
-
-# 未来更新(可能)
-
-- 依赖有点问题,目前我是直接把tomcat的lib全加到projectstructure里了
-- 把类名改了,用下去的话总感觉会有一天接到溯源的电话
-- shiro
-  - ~~自定义Behinder的pass(现在还只能是默认的rebeyond,太惨了)~~ 0.0.3已更新
-  -  ~~aes gcm加密方式(说实话也不知道有没有用)~~ 0.0.2已更新
-  - ~~commons-collections4利用链~~  0.0.3已更新
-  - commonsbeanutils利用链
-- fastjson
-- weblogic等等更多以后准备学习的JAVA漏洞
-- 由于java流只能读取一次,okhttp库的IO目前处于能用就行的丑陋状态,之后看看怎么改改
-- 看了比较新版的behinder之后这边考虑要不要把pagecontext删了(删了以后可能连不上旧版的behinder了)
-- 一键清除所有listener
-- 更多webshell管理器,哥斯拉等等
 
 # 感谢
 
